@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LG TV Homebrew Test</title>
+  <style>
+    /* Intentionally plain CSS for an older embedded browser. */
+    html, body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      background: #101521;
+      color: #f4f6fb;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    body { padding: 40px; box-sizing: border-box; }
+    h1 { font-size: 38px; margin: 0 0 10px; }
+    p { font-size: 22px; line-height: 1.45; }
+    .muted { color: #bac4d5; font-size: 17px; }
+    .panel {
+      margin-top: 28px;
+      padding: 24px;
+      border: 2px solid #4d648c;
+      background: #1a2435;
+      max-width: 820px;
+    }
+    button {
+      margin-top: 16px;
+      padding: 16px 24px;
+      color: #101521;
+      background: #f4f6fb;
+      border: 3px solid transparent;
+      font-size: 22px;
+      font-weight: bold;
+    }
+    button:focus { border-color: #65d8c3; outline: 0; }
+    #status { color: #65d8c3; min-height: 30px; }
+  </style>
+</head>
+<body>
+  <h1>LG NetCast Test App</h1>
+  <p>A small compatibility test for your LG Smart TV.</p>
+  <p class="muted">Target: LG 55LA970V-ZA · NetCast · firmware 04.28.17</p>
+
+  <div class="panel">
+    <p><strong>Application loaded successfully.</strong></p>
+    <p>This page confirms basic HTML, CSS, JavaScript and remote-key handling.</p>
+    <button id="testButton" type="button">Run interaction test</button>
+    <p id="status" aria-live="polite">Ready. Focus the button and press OK/Enter.</p>
+  </div>
+
+  <script>
+    (function () {
+      var button = document.getElementById("testButton");
+      var status = document.getElementById("status");
+      var count = 0;
+
+      function runTest() {
+        count += 1;
+        status.innerHTML = "Interaction test passed. Count: " + count;
+      }
+
+      button.onclick = runTest;
+      document.onkeydown = function (event) {
+        event = event || window.event;
+        var key = event.keyCode || event.which;
+        if ((key === 13 || key === 32) &&
+            document.activeElement === button) {
+          runTest();
+          if (event.preventDefault) event.preventDefault();
+          return false;
+        }
+        return true;
+      };
+    }());
+  </script>
+</body>
+</html>

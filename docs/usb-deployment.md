@@ -2,28 +2,36 @@
 
 Target: LG 55LA970V-ZA, NetCast firmware 04.28.17, reported SDK 03.05.
 
-## Current status
+## Build the experimental USB folder
 
-The USB has been prepared with an NTFS filesystem and the path:
+From the repository root on Linux:
+
+```bash
+bash scripts/build-usb.sh
+```
+
+This creates `dist/netcast-usb/lgapps/installed/9000001/index.html` and a ZIP at `dist/netcast-usb.zip`.
+
+To use another numeric folder name:
+
+```bash
+NETCAST_APP_ID=9000002 bash scripts/build-usb.sh
+```
+
+## Copy to the USB
+
+The USB should remain NTFS and have `lgapps` at its root. Back up any existing app folders first. Copy the *contents* of `dist/netcast-usb/lgapps/` into the USB's existing `lgapps/` folder, so the final path is:
 
 ```
-lgapps/installed/
+<USB>/lgapps/installed/9000001/index.html
 ```
 
-That folder is currently only a destination directory. This repository does not yet contain a verified TV-installable package.
+Do not copy the `dist/netcast-usb` wrapper folder itself into `installed`, and do not copy the ZIP file into `installed`.
 
-## Required checks before copying files
+Then eject the USB safely, insert it into the port labelled USB Apps, open My Applications, and select the USB apps icon.
 
-1. Confirm that the legacy LG NetCast SDK/App Test packaging workflow is still available.
-2. Confirm the exact package format, signing/DRM requirements, and directory structure for this model and SDK.
-3. Use the output of that supported packager—not the source HTML folder or a generic ZIP.
-4. Only then place the generated package in the location specified by the matching documentation.
+## Important limitations
 
-## Do not assume
+This is an **experimental community-layout test**, not a verified installable package. LG's official NetCast testing workflow uses an app ZIP uploaded to App Test and then downloads a DRM-packaged file. This build script does not sign or DRM-package the app. If the TV still does not list the app, that strongly suggests this model/firmware requires the official package or a different app bundle layout; do not keep repeating the same USB test.
 
-- A normal Android APK can be installed by NetCast.
-- Copying `app/index.html` to `lgapps/installed/` installs the app.
-- An arbitrary ZIP is a valid NetCast package.
-- Documentation for webOS or a different LG model applies to this TV.
-
-If the legacy packaging service is unavailable, report that as a blocker and research alternatives before attempting firmware modifications or undocumented exploits.
+NetCast is not Android or webOS: APKs and webOS IPK packages are not appropriate.
